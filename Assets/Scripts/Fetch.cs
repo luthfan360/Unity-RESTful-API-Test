@@ -63,6 +63,5 @@ public class Fetch : MonoBehaviour
             string pokeName = data.name;
             buttonText.text = char.ToUpper(pokeName[0]) + pokeName.Substring(1);
         }
-
     }
 }
