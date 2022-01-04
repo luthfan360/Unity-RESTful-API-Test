@@ -6,8 +6,8 @@ using UnityEngine.UI;
 
 public class Fetch : MonoBehaviour
 {
-
-    Image buttonImage;
+    GameObject[] displays;
+    Image[] buttonImage;
     Text buttonText;
     Texture2D textureCache;
     int randomInt;
@@ -17,37 +17,49 @@ public class Fetch : MonoBehaviour
 
     void Start()
     {
-        buttonImage = GameObject.Find("Display").GetComponent<Image>();
+        displays = GameObject.FindGameObjectsWithTag("Display");
+        buttonImage = new Image[displays.Length];
+
+        for (int i = 0; i < displays.Length; i++)
+        {
+            buttonImage[i] = displays[i].GetComponent<Image>();
+        }  
+
         buttonText = GameObject.Find("NameText").GetComponent<Text>();
         randomize();
     }
 
     public void randomize()
     {
-        randomInt = Random.Range(1, 808);
+        
         StartCoroutine(DownloadImage(MediaUrl));
         StartCoroutine(GetName(DataUrl));
     }
 
     IEnumerator DownloadImage(string MediaUrl)
     {   
-        string NewMediaUrl = MediaUrl + randomInt + ".png";
-        UnityWebRequest request = UnityWebRequestTexture.GetTexture(NewMediaUrl);
-        yield return request.SendWebRequest();
+        for (int i = 0; i < displays.Length; i++)
+        {
+            randomInt = Random.Range(1, 808);
+            string NewMediaUrl = MediaUrl + randomInt + ".png";
+            UnityWebRequest request = UnityWebRequestTexture.GetTexture(NewMediaUrl);
+            yield return request.SendWebRequest();
 
-        if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
-        {
-            Debug.Log(request.error);
-        }   
-        else
-        {
-            textureCache = DownloadHandlerTexture.GetContent(request);
-            buttonImage.sprite = Sprite.Create(textureCache, new Rect(0, 0, textureCache.width, textureCache.height), new Vector2(0.5f, 0.5f), 100.0f);
+            if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
+            {
+                Debug.Log(request.error);
+            }   
+            else
+            {
+                textureCache = DownloadHandlerTexture.GetContent(request);
+                buttonImage[i].sprite = Sprite.Create(textureCache, new Rect(0, 0, textureCache.width, textureCache.height), new Vector2(0.5f, 0.5f), 100.0f); 
+            }
         }       
     }
 
     IEnumerator GetName(string DataUrl)
     {
+        randomInt = Random.Range(1, 808);
         string NewDataUrl = DataUrl + randomInt;
         UnityWebRequest request = UnityWebRequest.Get(NewDataUrl);
         yield return request.SendWebRequest();
