@@ -31,7 +31,6 @@ public class Fetch : MonoBehaviour
             buttonText[i] = displays[i].GetComponentInChildren<Text>();
         }  
 
-        //buttonText = GameObject.Find("NameText").GetComponent<Text>();
         randomize();
     }
 
@@ -67,23 +66,23 @@ public class Fetch : MonoBehaviour
 
     IEnumerator GetName(string DataUrl, int randomInt, int index)
     {
-        // for (int i = 0; i < displays.Length; i++)
-        // {
-            string NewDataUrl = DataUrl + randomInt;
-            UnityWebRequest request = UnityWebRequest.Get(NewDataUrl);
-            yield return request.SendWebRequest();
+        string NewDataUrl = DataUrl + randomInt;
+        UnityWebRequest request = UnityWebRequest.Get(NewDataUrl);
+        yield return request.SendWebRequest();
 
-            if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError) 
-            {
-                Debug.Log(request.error);
-            }
-            else
-            {
-                string json = request.downloadHandler.text;
-                data = JsonUtility.FromJson<Data>(json);
-                string pokeName = data.name;
-                buttonText[index].text = char.ToUpper(pokeName[0]) + pokeName.Substring(1);
-            }
-        // }
+        if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError) 
+        {
+            Debug.Log(request.error);
+        }
+        else
+        {
+            string json = request.downloadHandler.text;
+            data = JsonUtility.FromJson<Data>(json);
+            string pokeName = data.name;
+            buttonText[index].text = char.ToUpper(pokeName[0]) + pokeName.Substring(1);
+
+            string abilityName = data.abilities[0].ability.abilityName;
+            Debug.Log(abilityName);
+        }
     }
 }

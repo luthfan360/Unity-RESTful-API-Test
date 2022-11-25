@@ -7,5 +7,5 @@ using UnityEngine.UI;
 public class Data
 {        
     public string name;
-
+    public Abilities[] abilities; 
 }
