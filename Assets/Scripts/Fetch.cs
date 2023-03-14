@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
+using Newtonsoft.Json.Linq;
 
 public class Fetch : MonoBehaviour
 {
@@ -80,8 +81,9 @@ public class Fetch : MonoBehaviour
             data = JsonUtility.FromJson<Data>(json);
             string pokeName = data.name;
             buttonText[index].text = char.ToUpper(pokeName[0]) + pokeName.Substring(1);
-
-            string abilityName = data.abilities[0].ability.abilityName;
+            
+            JObject obj = JObject.Parse(json);
+            string abilityName = (string)obj["abilities"][0]["ability"]["name"];
             Debug.Log(abilityName);
         }
     }
